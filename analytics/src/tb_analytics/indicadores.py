@@ -4,8 +4,9 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
+from scipy import stats
 from . import config
-from .dicionario import BINARIAS, FAIXAS, ORDEM_REGIOES
+from .dicionario import BINARIAS, FAIXAS, ORDEM_REGIOES, ROTULOS_BINARIAS
 from .funcoes import avaliar_incompletude, classificar_incompletude, comparar_desfecho
 
 TIPOS = {"Caso novo": "tipo_caso_novo", "Recidiva": "tipo_recidiva", "Reingresso após abandono": "tipo_reingresso",
@@ -21,13 +22,13 @@ TRM_REALIZADO = ["Detectável, sensível RIF", "Detectável, resistente RIF", "N
 
 # Função para float JSON-seguro (NaN -> None)
 def _f(x, nd=4):
-    return None if x is None or(isinstance(x, float) and not np.isfinite(x)) else round(float(x), nd)
+    return None if x is None or (isinstance(x, float) and not np.isfinite(x)) else round(float(x), nd)
 
 # Função de Cubo UF x ano (contagens por UF de residência e ano de diagnóstico)
 def cubo_uf_ano(tb: pd.DataFrame) -> dict:
     novo = tb["caso_novo"]
     pulm = novo & tb["pulmonar"]
-    ind= pd.DataFrame({"uf": tb["uf"].astype("string").fillna("NI"), "ano": tb["ano_diag"]})
+    ind = pd.DataFrame({"uf": tb["uf"].astype("string").fillna("NI"), "ano": tb["ano_diag"]})
     ind["notificacoes"] = 1
     for rot, col in TIPOS.items():
         ind[col] = (tb["tipo_entrada"] == rot)
@@ -98,7 +99,8 @@ FATORES = {"sexo": ("Sexo", "Feminino"), "faixa_etaria": ("Faixa etária", "35�
 
 # Funções para casos novos pulmonares 2015–2023 com desfecho cura (0) ou desfavorável (1)
 def coorte_desfecho(tb: pd.DataFrame) -> pd.DataFrame:
-    c = tb[tb["caso_novo"] & tb["pulmonar"] & tb["ano_diag"].between(config.ANO_INICIAL, config.ULTIMO_ANO_DESFECHO) & tb["desfecho_desfav"].notna()].copy()
+    c = tb[tb["caso_novo"] & tb["pulmonar"] & tb["ano_diag"].between(config.ANO_INICIAL, config.ULTIMO_ANO_DESFECHO)
+           & tb["desfecho_desfav"].notna()].copy()
     c["raca4"] = c["raca"].astype("string").replace({"Amarela": "Amarela/Indígena", "Indígena": "Amarela/Indígena"})
     c["faixa_etaria"] = c["faixa_etaria"].astype("string")
     return c

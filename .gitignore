@@ -7,6 +7,10 @@ analytics/data/processed/*
 *.dbf
 *.parquet
 
+# Dados do painel
+!painel-dados/.gitkeep
+*.json
+
 # Python / Jupyter
 __pycache__/
 .ipynb_checkpoints/

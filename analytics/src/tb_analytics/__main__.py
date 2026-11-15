@@ -1,5 +1,4 @@
 # Linha de comando do pipeline
-
 import argparse
 from . import config
 

@@ -82,7 +82,7 @@ export default function App() {
         )}
       </main>
       <footer className="rodape">
-        Fonte: SINAN/DATASUS · Projeto final — Programação e Análise de Dados em Saúde · [Nome do grupo]
+        Fonte: SINAN/DATASUS · Projeto final — Programação e Análise de Dados em Saúde · Wagner Santos de Jesus
       </footer>
     </div>
   );

@@ -2,7 +2,6 @@
 import argparse
 from . import config
 
-
 def main() -> None:
     p = argparse.ArgumentParser(prog="tb_analytics", description="Pipeline SINAN Tuberculose -> painel")
     p.add_argument("comando", choices=["baixar", "exportar", "pipeline"])
@@ -15,7 +14,6 @@ def main() -> None:
     if a.comando in ("exportar", "pipeline"):
         from .exportar import exportar
         exportar()
-
 
 if __name__ == "__main__":
     main()

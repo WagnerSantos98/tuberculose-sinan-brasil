@@ -14,7 +14,7 @@ def _gravar(pasta: Path, nome: str, obj) -> None:
     caminho = pasta / nome
     caminho.write_text(json.dumps(obj, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(f"[exportar] {nome:24s} {caminho.stat().st_size / 1024:8.1f} KB")
-    
+
 def exportar(saida: Path = config.SAIDA_PAINEL) -> None:
     t0 = time.time()
     saida = Path(saida)
@@ -45,11 +45,11 @@ def exportar(saida: Path = config.SAIDA_PAINEL) -> None:
         },
     }
     del bruto
-    
+
     _gravar(saida, "meta.json", meta)
     _gravar(saida, "cubo_uf_ano.json", indicadores.cubo_uf_ano(tb))
-    _gravar(saida, "a1_tendencia_json", indicadores.a1_tendencia(tb))
+    _gravar(saida, "a1_tendencia.json", indicadores.a1_tendencia(tb))
     _gravar(saida, "a2_fatores.json", indicadores.a2_fatores(tb))
     _gravar(saida, "tempo_tratamento.json", indicadores.tempo_tratamento(tb))
     _gravar(saida, "completude.json", indicadores.completude(tb))
-    print(f"[exportar] concluído em {time.time() - t0:.0f} s -> {saida.resolve()}") 
+    print(f"[exportar] concluído em {time.time() - t0:.0f} s -> {saida.resolve()}")

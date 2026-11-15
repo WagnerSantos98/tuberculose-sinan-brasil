@@ -1,0 +1,66 @@
+# Tuberculose no Brasil — analytics (Python) + painel (Vite/React servido por nginx)
+#
+#   docker compose --profile analytics run --rm analytics   # baixa os .dbc e gera painel-dados/*.json
+#   docker compose up -d frontend                           # painel em http://localhost:8080
+#   docker compose --profile notebook up notebook           # JupyterLab em http://localhost:8888
+#   docker compose --profile dev up frontend-dev            # Vite com recarga automática em http://localhost:5173
+#
+
+name: tuberculose-sinan
+
+x-analytics: &analytics
+  build:
+    context: ./analytics
+    args:
+      UID: ${UID:-1000}
+  image: tb-analytics:1.0
+
+services:
+  analytics:
+    <<: *analytics
+    profiles: ["analytics"]
+    command: ["pipeline"]
+    volumes:
+      - ./analytics/data:/app/data            # .dbc baixados + cache Parquet (não versionados)
+      - ./painel-dados:/app/output            # JSON agregados para o painel
+
+  notebook:
+    <<: *analytics
+    profiles: ["notebook"]
+    entrypoint: ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser",
+                 "--ServerApp.root_dir=/app/notebooks"]
+    command: []
+    environment:
+      JUPYTER_TOKEN: ${JUPYTER_TOKEN:-tuberculose}
+    ports:
+      - "${NOTEBOOK_PORTA:-8888}:8888"
+    volumes:
+      - ./analytics/data:/app/data
+      - ./analytics/notebooks:/app/notebooks
+      - ./analytics/figuras:/app/figuras
+
+  frontend:
+    build: ./frontend
+    image: tb-frontend:1.0
+    ports:
+      - "${PAINEL_PORTA:-8080}:80"
+    volumes:
+      - ./painel-dados:/usr/share/nginx/html/data:ro
+    restart: unless-stopped
+
+  frontend-dev:
+    image: node:22-alpine
+    profiles: ["dev"]
+    working_dir: /app/frontend
+    command: sh -c "npm ci --no-audit --no-fund && npm run dev -- --host 0.0.0.0"
+    environment:
+      PAINEL_DADOS: /app/painel-dados
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app/frontend
+      - frontend_node_modules:/app/frontend/node_modules
+      - ./painel-dados:/app/painel-dados:ro
+
+volumes:
+  frontend_node_modules:

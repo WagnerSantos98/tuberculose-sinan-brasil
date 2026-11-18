@@ -2,7 +2,7 @@
 
 Projeto final da disciplina **Programação e Análise de Dados em Saúde** (Prof. Lucas Miguel de Carvalho).
 
-**Grupo:** [Nome do grupo] — [Integrante 1], [Integrante 2]
+**Discente:** Wagner Santos de Jesus
 
 Análise dos casos de tuberculose notificados no Brasil entre 2015 e 2025, a partir dos microdados do **SINAN** (Ministério da Saúde/DATASUS), com:
 

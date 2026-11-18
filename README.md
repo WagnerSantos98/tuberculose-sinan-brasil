@@ -41,7 +41,7 @@ Os dois lados não importam código um do outro: o frontend só conhece o format
 Pré-requisito: [Docker Desktop](https://www.docker.com/products/docker-desktop/) (ou Docker Engine + Compose v2).
 
 ```bash
-git clone https://github.com/[usuario]/tuberculose-sinan-brasil.git
+git clone https://github.com/WagnerSantos98/tuberculose-sinan-brasil
 cd tuberculose-sinan-brasil
 
 # 1. Gera os dados do painel: baixa os 11 arquivos do DATASUS (~55 MB) e exporta os JSON (~3 min na 1ª vez)

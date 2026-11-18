@@ -1,4 +1,4 @@
-# Tuberculose no Brasil, 2015–2025 — SINAN
+# Tuberculose no Brasil, 2015–2025 - SINAN
 
 Projeto final da disciplina **Programação e Análise de Dados em Saúde** (Prof. Lucas Miguel de Carvalho).
 
